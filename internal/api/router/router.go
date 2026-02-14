@@ -12,6 +12,16 @@ func SetupRouter(repo *repository.HeartbeatRepository) *gin.Engine {
 
 	handler := handlers.NewHeartbeatHandler(repo)
 
+	// Root endpoint
+	r.GET("/", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"service":  "Heartbeat Monitoring API",
+			"provider": "UptimeBeats.com",
+			"register": "https://uptimebeats.com",
+			"example":  "https://heartbeat.uptimebeats.com/b/your-unique-id",
+		})
+	})
+
 	// Heartbeat endpoint
 	// Apply rate limiting: 3 req/min
 	r.GET("/b/:uuid", middleware.RateLimitMiddleware(), handler.HandleHeartbeat)
