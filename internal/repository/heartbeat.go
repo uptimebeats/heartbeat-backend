@@ -98,12 +98,6 @@ func (r *HeartbeatRepository) RecordHeartbeat(ctx context.Context, status *model
 // 3. Check if (latest_received_at + frequency + tolerance) < now
 // 4. OR if no status exists and (created_at + frequency + tolerance) < now (edge case for new sites never pinged)
 func (r *HeartbeatRepository) CheckHeartbeatFailures(ctx context.Context) error {
-	// This function will likely need to be more complex: identifying failures, creating incidents, and updating site status.
-	// For efficiency, we can do this in a single query or a transaction.
-
-	// Simplified approach for the MVP implementation:
-	// Find sites that are UP but should be DOWN.
-
 	now := time.Now()
 
 	query := `
@@ -190,7 +184,7 @@ func (r *HeartbeatRepository) markSitesDown(ctx context.Context, siteIDs []strin
 
 		_, err = tx.Exec(ctx, `
 			INSERT INTO incidents_heartbeat (heartbeat_site_id, heartbeat_status_id, status, created_at, comments)
-			VALUES ($1, $2, true, NOW(), 'Heartbeat missing')
+			VALUES ($1, $2, false, NOW(), 'Heartbeat missing')
 		`, id, statusID)
 		if err != nil {
 			return fmt.Errorf("failed to create incident for site %s: %w", id, err)

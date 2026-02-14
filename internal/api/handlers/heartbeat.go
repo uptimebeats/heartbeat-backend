@@ -47,12 +47,6 @@ func (h *HeartbeatHandler) HandleHeartbeat(c *gin.Context) {
 	clientIP := c.ClientIP()
 	method := c.Request.Method
 	now := time.Now()
-	// Since this is a heartbeat check *from* the user's service calling *us*, the status code is technically 200 from *our* perspective.
-	// But the schema has `status_code` column. Does this mean the status code WE return, or the status code of the service?
-	// The prompt says "which will get pinged from url like below".
-	// Usually this means the user's service calls this URL to say "I'm alive".
-	// The `status_code` in `sites_status_heartbeat` might be for *our* response or just placeholder.
-	// Let's assume 200 for now as it's a successful ping received.
 	statusCode := int64(http.StatusOK)
 
 	status := &models.HeartbeatStatus{
