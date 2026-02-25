@@ -18,7 +18,7 @@ func SetupRouter(repo *repository.HeartbeatRepository) *gin.Engine {
 			"service":  "Heartbeat Monitoring API",
 			"provider": "UptimeBeats.com",
 			"register": "https://uptimebeats.com",
-			"example":  "https://heartbeat.uptimebeats.com/b/your-unique-id",
+			"example":  "http://heartbeat.uptimebeats.com/b/your-unique-id",
 		})
 	})
 
